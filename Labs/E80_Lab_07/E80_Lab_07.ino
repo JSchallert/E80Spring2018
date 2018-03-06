@@ -1,10 +1,9 @@
 /********
-Default E80 Lab 01 
-Current Author: Christopher McElroy (cmcelroy@g.hmc.edu) '19 (contributed in 2017)
-Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016)
-                        Apoorva Sharma (asharma@hmc.edu) '17 (contributed in 2016)
-*/
-
+E80 Lab 7 Code
+Celeste Cerna
+Peter Johnson
+Juliette Martin
+Jonathan Schallert
 /* Libraries */
 
 // general
@@ -139,7 +138,6 @@ void loop() {
   if (logger.loopTime(loopStartTime) && keepLogging) {
     keepLogging = logger.log();
   }
-
 }
 
 void PControl() {
@@ -164,7 +162,6 @@ void PControl() {
 
 
 void LongLatToXY(){
-
   // This function should set the values of state_estimator.state.x, state_estimator.state.y, and state_estimator.state.heading
   // It can make use of the constants RADIUS_OF_EARTH, ORIGIN_LAT, ORIGIN_LON
   // The origin values can be hard coded at the top of this file.
@@ -179,17 +176,13 @@ void LongLatToXY(){
   state_estimator.state.x = x
   state_estimator.state.y = y
   state_estimator.state.heading = imu.state.heading
-  
-}
+ }
 
 float angleDiff(float a){
   while (a>PI)
     a = a - 2*PI;
-
   while (a<-PI)
     a = a + 2*PI;
-
   return a;
-
 }
 
