@@ -28,6 +28,10 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #define ORIGIN_LAT  34.106465 
 #define ORIGIN_LON  -117.712488
 #define RADIUS_OF_EARTH 6.371 * 10^6
+#define U_nom = 50
+#define K_R = 1;
+#define K_L = 1;
+
 
 // template library
 #include <LED.h>
@@ -151,6 +155,37 @@ void PControl() {
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
+  float yaw_des = atan2(y_des - y, x_des - x);
+
+  //calculate yaw angle
+  //error
+  float e = yaw_des - yaw;
+  //control effort
+  float u = K_P * e;
+  //motor thrust values
+  U_R = U_nom + u;
+  U_L = U_nom - u;
+  U_R = U_R*K_R;
+  U_L = U_L*K_L;
+
+  //bound control values between 0 and 127
+  if (U_R > 127)
+  {
+    U_R = 127;
+  }
+  if (U_L > 127)
+  {
+    U_L = 127;
+  }
+  if (U_R < 0)
+  {
+    U_R = 0;
+  }
+  if (U_L < 0)
+  {
+    U_L = 0;
+  }
+  
 
   
   
@@ -171,14 +206,14 @@ void LongLatToXY(){
   // You can access the current GPS latitude and longitude readings with gps.state.lat and gps.state.lon
   // You can access the current imu heading with imu.state.heading
   
-  float latitudeChange = gps.state.lat - ORIGIN_LAT
-  float longitudeChange = gps.state.lon - ORIGIN_LON
+  float latitudeChange = gps.state.lat - ORIGIN_LAT;
+  float longitudeChange = gps.state.lon - ORIGIN_LON;
   
-  float y = RADIUS_OF_EARTH*latitudeChange
-  float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT)) 
-  state_estimator.state.x = x
-  state_estimator.state.y = y
-  state_estimator.state.heading = imu.state.heading
+  float y = RADIUS_OF_EARTH*latitudeChange;
+  float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT); 
+  state_estimator.state.x = x;
+  state_estimator.state.y = y;
+  state_estimator.state.heading = imu.state.heading;
   
 }
 
