@@ -205,23 +205,13 @@ void LongLatToXY(){
   
   float latitudeChange = gps.state.lat - ORIGIN_LAT;
   float longitudeChange = gps.state.lon - ORIGIN_LON;
-  
-<<<<<<< HEAD
   float y = RADIUS_OF_EARTH*latitudeChange
   float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT)) 
   state_estimator.state.x = x
   state_estimator.state.y = y
   state_estimator.state.heading = imu.state.heading
  }
-=======
-  float y = RADIUS_OF_EARTH*latitudeChange;
-  float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT); 
-  state_estimator.state.x = x;
-  state_estimator.state.y = y;
-  state_estimator.state.heading = imu.state.heading;
-  
-}
->>>>>>> 624765f37f6351fd1377b1c9790813b155deb473
+
 
 float angleDiff(float a){
   while (a>PI)
