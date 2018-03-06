@@ -27,6 +27,7 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 
 #define ORIGIN_LAT  34.106465 
 #define ORIGIN_LON  -117.712488
+#define RADIUS_OF_EARTH 6.371 * 10^6
 
 // template library
 #include <LED.h>
@@ -150,6 +151,8 @@ void PControl() {
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
+
+  
   
   float dist = sqrt(pow(state_estimator.state.x-x_des,2) + pow(state_estimator.state.y-y_des,2));
   if (dist < success_radius && current_way_point < num_way_points)
@@ -167,7 +170,15 @@ void LongLatToXY(){
   // The origin values can be hard coded at the top of this file.
   // You can access the current GPS latitude and longitude readings with gps.state.lat and gps.state.lon
   // You can access the current imu heading with imu.state.heading
-
+  
+  float latitudeChange = gps.state.lat - ORIGIN_LAT
+  float longitudeChange = gps.state.lon - ORIGIN_LON
+  
+  float y = RADIUS_OF_EARTH*latitudeChange
+  float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT)) 
+  state_estimator.state.x = x
+  state_estimator.state.y = y
+  state_estimator.state.heading = imu.state.heading
   
 }
 
