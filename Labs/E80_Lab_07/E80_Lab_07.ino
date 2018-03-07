@@ -31,7 +31,9 @@ Jonathan Schallert
 #define U_nom 50
 #define K_R 1
 #define K_L 1
-#define K_P 50
+#define K_P 10
+float U_L;
+float U_R;
 
 
 // template library
@@ -158,7 +160,8 @@ void PControl() {
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
-  float yaw_des = atan2(y_des - y, x_des - x);
+  float yaw_out = atan2(y_des - y, x_des - x);
+  float yaw_des = angleDiff(yaw_out);
 
   //calculate yaw angle
   //error
@@ -197,7 +200,7 @@ void PControl() {
     current_way_point = current_way_point + 1;
 
   /*Set P control thrust - students must add code here */
-  motorDriver.drive(0,0,0,0);
+  motorDriver.drive(U_R,U_L,0,0);
 }
 
 
