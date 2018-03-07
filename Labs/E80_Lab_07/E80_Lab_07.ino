@@ -10,6 +10,7 @@ Jonathan Schallert
 #include <Arduino.h>
 #include <Wire.h>
 #include <Pinouts.h>
+#include <math.h>
 
 // 80-specific
 #include <SensorGPS.h>
@@ -26,10 +27,11 @@ Jonathan Schallert
 
 #define ORIGIN_LAT  34.106465 
 #define ORIGIN_LON  -117.712488
-#define RADIUS_OF_EARTH 6.371 * 10^6
-#define U_nom = 50
-#define K_R = 1;
-#define K_L = 1;
+#define RADIUS_OF_EARTH 6371000
+#define U_nom 50
+#define K_R 1
+#define K_L 1
+#define K_P 50
 
 
 // template library
@@ -148,6 +150,9 @@ void PControl() {
   // hard coded way points to track
   float x_desired_list[] = {0, 20, 0 };
   float y_desired_list[] = {0, 0 , 0 };
+  float y = state_estimator.state.y;
+  float x = state_estimator.state.x;
+  float yaw = state_estimator.state.heading;
   int num_way_points = 3;
   float success_radius = 4.0;
 
@@ -161,8 +166,8 @@ void PControl() {
   //control effort
   float u = K_P * e;
   //motor thrust values
-  U_R = U_nom + u;
-  U_L = U_nom - u;
+  float U_R = U_nom + u;
+  float U_L = U_nom - u;
   U_R = U_R*K_R;
   U_L = U_L*K_L;
 
@@ -205,11 +210,11 @@ void LongLatToXY(){
   
   float latitudeChange = gps.state.lat - ORIGIN_LAT;
   float longitudeChange = gps.state.lon - ORIGIN_LON;
-  float y = RADIUS_OF_EARTH*latitudeChange
-  float x = RADIUS_OF_EARTH*longitudeChange*cos(ORIGIN_LAT)) 
-  state_estimator.state.x = x
-  state_estimator.state.y = y
-  state_estimator.state.heading = imu.state.heading
+  float y = RADIUS_OF_EARTH*latitudeChange*M_PI*(1/180);
+  float x = RADIUS_OF_EARTH*longitudeChange*M_PI*(1/180)*cos(ORIGIN_LAT);
+  state_estimator.state.x = x;
+  state_estimator.state.y = y;
+  state_estimator.state.heading = imu.state.heading;
  }
 
 
