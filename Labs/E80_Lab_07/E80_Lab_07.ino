@@ -29,8 +29,8 @@ Jonathan Schallert
 #define ORIGIN_LON  -117.712488
 #define RADIUS_OF_EARTH 6371000
 #define U_nom 50
-#define K_R 1
-#define K_L 1
+#define K_R 1.1
+#define K_L 1.1
 #define K_P 10
 float U_L;
 float U_R;
@@ -150,8 +150,8 @@ void loop() {
 
 void PControl() {
   // hard coded way points to track
-  float x_desired_list[] = {0, 20, 0 };
-  float y_desired_list[] = {0, 0 , 0 };
+  float x_desired_list[] = {0,  0, 0 };
+  float y_desired_list[] = {0, -20 , 0 };
   float y = state_estimator.state.y;
   float x = state_estimator.state.x;
   float yaw = state_estimator.state.heading;
@@ -160,14 +160,14 @@ void PControl() {
 
   float x_des = x_desired_list[current_way_point];
   float y_des = y_desired_list[current_way_point];
-  float yaw_out = atan2(y_des - y, x_des - x);
+  float yaw_out = atan2((y_des - y)*PI/180, (x_des - x)*PI/180);
   float yaw_des = angleDiff(yaw_out);
 
   //calculate yaw angle
   //error
   float e = yaw_des - yaw;
   //control effort
-  float u = K_P * e;
+  float u = (K_P * e);
   //motor thrust values
   float U_R = U_nom + u;
   float U_L = U_nom - u;
@@ -175,13 +175,13 @@ void PControl() {
   U_L = U_L*K_L;
 
   //bound control values between 0 and 127
-  if (U_R > 127)
+  if (U_R > 187)
   {
-    U_R = 127;
+    U_R = 187;
   }
-  if (U_L > 127)
+  if (U_L > 187)
   {
-    U_L = 127;
+    U_L = 187;
   }
   if (U_R < 0)
   {
@@ -200,7 +200,7 @@ void PControl() {
     current_way_point = current_way_point + 1;
 
   /*Set P control thrust - students must add code here */
-  motorDriver.drive(U_R,U_L,0,0);
+  motorDriver.drive(-U_L,-U_R,0,0);
 }
 
 
@@ -213,11 +213,11 @@ void LongLatToXY(){
   
   float latitudeChange = gps.state.lat - ORIGIN_LAT;
   float longitudeChange = gps.state.lon - ORIGIN_LON;
-  float y = RADIUS_OF_EARTH*latitudeChange*M_PI*(1/180);
-  float x = RADIUS_OF_EARTH*longitudeChange*M_PI*(1/180)*cos(ORIGIN_LAT);
+  float y = 6371000*latitudeChange*PI*(1/180);
+  float x = 6371000*longitudeChange*PI*(1/180)*cos(ORIGIN_LAT*PI/180);
   state_estimator.state.x = x;
   state_estimator.state.y = y;
-  state_estimator.state.heading = imu.state.heading;
+  state_estimator.state.heading = angleDiff(imu.state.heading*PI/180);
  }
 
 
