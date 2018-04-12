@@ -20,7 +20,7 @@ Previous Contributors:  Josephine Wong (jowong@hmc.edu) '18 (contributed in 2016
 #include <Printer.h>
 #include <PControl.h>
 //change
-#include <contSampler.h>
+#include <contSampler2.h>
 #define mySerial Serial1
 #include <LED.h>  // A template of a data soruce library
 
@@ -55,8 +55,6 @@ void setup() {
   logger.include(&adc);
   logger.init();
 
-  //change
-  smp.init();
 
   printer.init();
   imu.init();
@@ -107,7 +105,7 @@ void loop() {
     printer.printValue(8,imu.printAccels());
     //change
     printer.printValue(9, smp.printSample());
-    printer.printValue(10, smp.printState());
+  
     printer.printToSerial();  // To stop printing, just comment this line out
   }
 
@@ -143,17 +141,18 @@ void loop() {
     led.flashLED();
   }
 
+  //change
+  if (currentTime- smp.lastExecutionTime > LOOP_PERIOD) {
+    smp.lastExecutionTime = currentTime;
+    smp.updateSample();
+  }
+  
   if (currentTime- logger.lastExecutionTime > LOOP_PERIOD && logger.keepLogging) {
     logger.lastExecutionTime = currentTime;
     logger.log();
   }
 
-  //change
-  if (currentTime- smp.lastExecutionTime > LOOP_PERIOD && smp.keepLogging) {
-    smp.lastExecutionTime = currentTime;
-    smp.updateSample();
-    smp.log();
-  }
+
   
 }
 
