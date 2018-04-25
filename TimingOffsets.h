@@ -12,7 +12,7 @@
 #define P_CONTROL_LOOP_OFFSET 45
 #define LED_LOOP_OFFSET 50
 //change
-#define SMP_LOOP_OFFSET 55
+#define SMP_LOOP_OFFSET 55 // should take 5 ms for 50 reads
 #define LOGGER_LOOP_OFFSET 75
 
 

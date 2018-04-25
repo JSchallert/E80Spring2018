@@ -3,10 +3,8 @@
 
 //number of samples to take
 #define NUM_SAMPS 50
-//pin on teensy encoder is inputing to A02 ==16
-#define ENCODER_PIN 16
 //time to take a single sample
-#define SAMP_TIME 5
+#define SAMP_TIME 0.1
 
 #include <Arduino.h>
 #include "Pinouts.h"
@@ -17,6 +15,7 @@ class contSampler : public DataSource
 {
 public:
 	contSampler(void);
+	void init(void);
 	
 	// Managing state
   	int samps [NUM_SAMPS];
