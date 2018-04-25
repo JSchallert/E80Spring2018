@@ -1,0 +1,2 @@
+rollIMU,pitchIMU,headingIMU,accelX,accelY,accelZ,lat,lon,hdop,nsats,x,y,heading,left,right,auxiliary,vertical,A00,A01,EncoderA02,NewPressureA03,A10,A11,A12,A13,A14,A15,A16,A17,A18,PD1A19,PD2A20,Velocity
+float,float,float,float,float,float,int32,int32,uint16,uint8,float,float,float,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,int,float
